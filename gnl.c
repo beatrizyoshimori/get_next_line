@@ -119,15 +119,19 @@ char    *get_next_line(int fd)
     buf = malloc(bytes);
     rd = read(fd, buf, bytes);
     printf("rd: %d\n", rd);
+    printf("buf: %s\n", buf);
     if (rd == 0)
     {
+        if (ft_strlen(next_line) != 0)
+		{
+			printf("*next_line(nl(!N)): %s\n", next_line);
+            next_line = NULL;
+			return (next_line);
+        }
         str = NULL;
-        printf("strlen: %zu\n", ft_strlen(next_line));
-        printf("*next_line(rd0): %s\n", next_line);
-        printf("*%s\n", str);
+        printf("*str: %s\n", str);
         return (str);
     }
-    //printf("buf: %s\n", buf);
     i = 0;
     while (i < bytes)
     {
@@ -179,6 +183,7 @@ int main(void)
     int fd;
 
     fd = open("teste", O_RDONLY);
+    get_next_line(fd);
     get_next_line(fd);
     get_next_line(fd);
     get_next_line(fd);
