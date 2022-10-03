@@ -114,12 +114,19 @@ char    *get_next_line(int fd)
     int             bytes;
     int             i;
 
-    //printf("next_line1: %s\n", next_line);
+    printf("next_line1: %s\n", next_line);
     bytes = 5;
     buf = malloc(bytes);
     rd = read(fd, buf, bytes);
-    if (rd <= 0)
-        return (NULL);
+    printf("rd: %d\n", rd);
+    if (rd == 0)
+    {
+        str = NULL;
+        printf("strlen: %zu\n", ft_strlen(next_line));
+        printf("*next_line(rd0): %s\n", next_line);
+        printf("*%s\n", str);
+        return (str);
+    }
     //printf("buf: %s\n", buf);
     i = 0;
     while (i < bytes)
@@ -136,15 +143,15 @@ char    *get_next_line(int fd)
         str = ft_strjoin(next_line, ft_substr(buf, 0, i));
         aux = ft_strdup(next_line);
         next_line = ft_substr(buf, i + 1, bytes - i);
-        printf("line: %s\n", str);
-        //printf("next_line: %s\n", next_line);
+        printf("*line: %s\n", str);
+        printf("next_line: %s\n", next_line);
     }
     else
     {
         aux = ft_strdup(next_line);
         next_line = ft_strjoin(aux, buf);
-        //printf("next_line(else): %s\n", next_line);
-        str = ft_strjoin(buf, get_next_line(fd));
+        printf("next_line(else): %s\n", next_line);
+        str = ft_strdup(get_next_line(fd));
         //printf("line(else): %s\n", str);
     }
     return (str);
