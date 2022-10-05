@@ -12,9 +12,9 @@
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+int	ft_strlen(const char *s)
 {
-	size_t	length;
+	int	length;
 
 	length = 0;
 	while (s != NULL && s[length])
@@ -22,9 +22,28 @@ size_t	ft_strlen(const char *s)
 	return (length);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
 	size_t	i;
+	size_t	j;
+	void	*t;
+
+	if (size == 0 || nmemb == 0 || nmemb >= 2147483647 / size)
+		return (NULL);
+	i = nmemb * size;
+	t = malloc(i);
+	j = 0;
+	while (j < i)
+	{
+		((unsigned char *)t)[j] = '\0';
+		j++;
+	}
+	return (t);
+}
+
+char	*ft_substr(char const *s, int start, int len)
+{
+	int		i;
 	char	*sub;
 
 	if (start > ft_strlen(s))
@@ -97,25 +116,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (s3);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
-{
-	size_t	i;
-
-	if (size < 0)
-		dst[ft_strlen(src) + 1 + size] = '\0';
-	i = 0;
-	if (size != 0)
-	{
-		while (i < size - 1 && src[i])
-		{
-			dst[i] = src[i];
-			i++;
-		}
-		dst[i] = '\0';
-	}
-	return (ft_strlen(src));
-}
-
 void	ft_putstr_fd(char *s, int fd)
 {
 	int	i;
@@ -136,47 +136,47 @@ void	ft_putendl_fd(char *s, int fd)
 
 char    *get_next_line(int fd)
 {
-	char		*buf;
+	//char		*buf;
 	char		*str = NULL;
 	char		*aux;
 	static char	*next_line = 0;
 	int			rd;
-	size_t		i;
+	int			i;
 
-	buf = malloc(BUFFER_SIZE + 1);
-	rd = read(fd, buf, BUFFER_SIZE);
-	if (rd == 0)
+	str = (char *)calloc(BUFFER_SIZE + 1, sizeof(char));
+	rd = read(fd, str, BUFFER_SIZE);
+	// if (rd == 0)
+	// {
+	// 	free(str);
+	// 	str = ft_strdup("");
+	// }
+	if (BUFFER_SIZE <= 0 || rd < 0 || !str || (rd == 0 && (!next_line || ft_strlen(next_line) == 0)))
 	{
-		free(buf);
-		buf = ft_strdup("");
-	}
-	// printf("next_line: %s", next_line);
-	if (BUFFER_SIZE <= 0 || rd < 0 || !buf || (rd == 0 && (!next_line || ft_strlen(next_line) == 0)))
-	{
-		free(buf);
+		free(str);
 		return (NULL);
 	}
 	if (next_line == NULL)
 		next_line = ft_strdup("");
-	aux = ft_strjoin(next_line, buf);
+	aux = ft_strjoin(next_line, str);
+	free(str);
+	free(next_line);
 	next_line = ft_strdup(aux);
-	// printf("next_line2: %s", next_line);
 	free(aux);
 	i = 0;
 	while (next_line[i] != '\n' && next_line[i] && i < ft_strlen(next_line))
 		i++;
-	// printf("i: %zu\n", i);
-	// printf("%zu\n", ft_strlen(next_line));
 	if (next_line[i] == '\n' || rd < BUFFER_SIZE)
 	{
-		str = ft_substr(next_line, 0, i);
-		if (next_line[i] == '\n')
-				ft_putendl_fd(str, 1);
-		else if (ft_strlen(str) == 0)
+		// if (i == 0 && next_line[0] == '\n')
+		// 	i++;
+		str = ft_substr(next_line, 0, i + 1);
+		// if (next_line[i] == '\n')
+		// 	ft_putendl_fd(str, 1);
+		if (ft_strlen(str) == 0)
 			ft_putstr_fd("(null)", 1);
 		else
 			ft_putstr_fd(str, 1);
-		aux = ft_substr(next_line, i + 1, ft_strlen(next_line) - 1);
+		aux = ft_substr(next_line, i + 1, ft_strlen(next_line) - i);
 		free(next_line);
 		next_line = ft_strdup(aux);
 		free(aux);
@@ -185,83 +185,9 @@ char    *get_next_line(int fd)
 	else
 	{
 		str = ft_strdup(get_next_line(fd));
+		free(str);
 	}
-	free(buf);
 	return (str);
-	// i = 0;
-	// while (buf[i])
-	// {
-	// 	if (buf[i] == '\n')
-	// 		break;
-	// 	i++;
-	// }
-
-    // // if (rd == 0)
-    // // {
-    // //     if (ft_strlen(next_line) != 0)
-	// // 	{
-	// // 		printf("if(rd0): ");
-	// // 		ft_putstr_fd(next_line, 1);
-	// // 		return (next_line);
-    // //     }
-	// // 	ft_putstr_fd("(null)", 1);
-    // //     return (str);
-    // // }
-    // i = 0;
-    // while (i < rd)
-    // {
-    //     if (buf[i] == '\n')
-    //         break ;
-    //     i++;
-    // }
-
-	//printf("i: %d\n", i);
-    // if (rd < bytes)
-    //     i = rd;
-
-
-    // if (buf[i] == '\n')
-    // {
-    //     str = ft_strjoin(next_line, ft_substr(buf, 0, i));
-    //     //aux = ft_strdup(next_line);
-    //     next_line = ft_substr(buf, i + 1, BUFFER_SIZE - i);
-	// 	printf("if:");
-	// 	printf("str: %s\n", str);
-	// 	printf("next_line: %s\n*", next_line);
-    //     ft_putendl_fd(str, 1);
-	// 	if (ft_strlen(next_line) != 0)
-	// 		get_next_line(fd);
-    //     //printf("next_line: %s\n", next_line);
-	// 	return (str);
-    // }
-    // else
-    // {
-    //     aux = ft_strdup(next_line);
-    //     next_line = ft_strjoin(aux, buf);
-    //     //printf("next_line(else): %s\n", next_line);
-    //     str = ft_strdup(get_next_line(fd));
-    //     //printf("line(else): %s\n", str);
-    // }
-    // return (str);
-
-
-    // str = ft_strjoin(next_line, buf);
-    // //ft_strlcpy(str, buf, i + 1);
-    // printf("str: %s\n", str);
-    // if (next_line != 0)
-    // {
-    //     aux = ft_strjoin(next_line, str);
-    //     printf("aux: %s\n", aux);
-    // }
-    // if (i < bytes)
-    //     next_line = &buf[i];
-    // else
-    // {
-    //     next_line = buf;
-    //     printf("next_line: %s\n", next_line);
-    //     get_next_line(fd);
-    // }
-    // return (aux);
 }
 
 // int main(void)
@@ -270,8 +196,8 @@ char    *get_next_line(int fd)
 
 //     fd = open("teste", O_RDONLY);
 //     get_next_line(fd);
-//     //get_next_line(fd);
-//     // get_next_line(fd);
-//     // get_next_line(fd);
-//     // get_next_line(fd);
+//     get_next_line(fd);
+//     get_next_line(fd);
+//     get_next_line(fd);
+//     get_next_line(fd);
 // }

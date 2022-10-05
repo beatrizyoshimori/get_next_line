@@ -25,10 +25,9 @@
 char	*get_next_line(int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putstr_fd(char *s, int fd);
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strdup(const char *src);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-size_t	ft_strlen(const char *s);
+char	*ft_substr(char const *s, int start, int len);
+int 	ft_strlen(const char *s);
 
 #endif
