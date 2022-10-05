@@ -6,7 +6,7 @@
 /*   By: byoshimo <byoshimo@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 01:49:36 by byoshimo          #+#    #+#             */
-/*   Updated: 2022/10/04 02:58:55 by byoshimo         ###   ########.fr       */
+/*   Updated: 2022/10/05 05:26:27 by byoshimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,11 @@ char	*ft_strdup(const char *src)
 	char	*c;
 
 	length = ft_strlen(src);
-	c = malloc(length + 1);
+	if (!src)
+		return (NULL);
+	c = (char *)malloc((length + 1) * sizeof(char));
+	if (c == NULL)
+		return (NULL);
 	i = 0;
 	while (i < length)
 	{
@@ -132,65 +136,115 @@ void	ft_putendl_fd(char *s, int fd)
 
 char    *get_next_line(int fd)
 {
-    char            *buf;
-    char            *str = NULL;
-    char            *aux;
-    static char     *next_line = 0;
-    int             rd;
-    int             i;
+	char		*buf;
+	char		*str = NULL;
+	char		*aux;
+	static char	*next_line = 0;
+	int			rd;
+	size_t		i;
 
-    //printf("next_line1: %s\n", next_line);
-    buf = malloc(BUFFER_SIZE);
-    rd = read(fd, buf, BUFFER_SIZE);
-    //printf("rd: %d\n", rd);
+	buf = malloc(BUFFER_SIZE + 1);
+	rd = read(fd, buf, BUFFER_SIZE);
+	if (rd == 0)
+	{
+		free(buf);
+		buf = ft_strdup("");
+	}
+	// printf("next_line: %s", next_line);
+	if (BUFFER_SIZE <= 0 || rd < 0 || !buf || (rd == 0 && (!next_line || ft_strlen(next_line) == 0)))
+	{
+		free(buf);
+		return (NULL);
+	}
 	if (next_line == NULL)
 		next_line = ft_strdup("");
-    // printf("buf: %s\n", buf);
-    if (rd == 0)
-    {
-        if (ft_strlen(next_line) != 0)
-		{
-			printf("if(rd0): ");
-			ft_putstr_fd(next_line, 1);
-			return (next_line);
-        }
-		ft_putstr_fd("(null)", 1);
-        return (str);
-    }
-    i = 0;
-    while (i < rd)
-    {
-        if (buf[i] == '\n')
-            break ;
-        i++;
-    }
+	aux = ft_strjoin(next_line, buf);
+	next_line = ft_strdup(aux);
+	// printf("next_line2: %s", next_line);
+	free(aux);
+	i = 0;
+	while (next_line[i] != '\n' && next_line[i] && i < ft_strlen(next_line))
+		i++;
+	// printf("i: %zu\n", i);
+	// printf("%zu\n", ft_strlen(next_line));
+	if (next_line[i] == '\n' || rd < BUFFER_SIZE)
+	{
+		str = ft_substr(next_line, 0, i);
+		if (next_line[i] == '\n')
+				ft_putendl_fd(str, 1);
+		else if (ft_strlen(str) == 0)
+			ft_putstr_fd("(null)", 1);
+		else
+			ft_putstr_fd(str, 1);
+		aux = ft_substr(next_line, i + 1, ft_strlen(next_line) - 1);
+		free(next_line);
+		next_line = ft_strdup(aux);
+		free(aux);
+		return (str);
+	}
+	else
+	{
+		str = ft_strdup(get_next_line(fd));
+	}
+	free(buf);
+	return (str);
+	// i = 0;
+	// while (buf[i])
+	// {
+	// 	if (buf[i] == '\n')
+	// 		break;
+	// 	i++;
+	// }
 
-	printf("i: %d\n", i);
+    // // if (rd == 0)
+    // // {
+    // //     if (ft_strlen(next_line) != 0)
+	// // 	{
+	// // 		printf("if(rd0): ");
+	// // 		ft_putstr_fd(next_line, 1);
+	// // 		return (next_line);
+    // //     }
+	// // 	ft_putstr_fd("(null)", 1);
+    // //     return (str);
+    // // }
+    // i = 0;
+    // while (i < rd)
+    // {
+    //     if (buf[i] == '\n')
+    //         break ;
+    //     i++;
+    // }
+
+	//printf("i: %d\n", i);
     // if (rd < bytes)
     //     i = rd;
-    if (buf[i] == '\n')
-    {
-        str = ft_strjoin(next_line, ft_substr(buf, 0, i));
-        //aux = ft_strdup(next_line);
-        next_line = ft_substr(buf, i + 1, BUFFER_SIZE - i);
-		printf("if:");
-		printf("str: %s\n", str);
-		printf("next_line: %s\n*", next_line);
-        ft_putendl_fd(str, 1);
-		if (ft_strlen(next_line) != 0)
-			get_next_line(fd);
-        //printf("next_line: %s\n", next_line);
-		return (str);
-    }
-    else
-    {
-        aux = ft_strdup(next_line);
-        next_line = ft_strjoin(aux, buf);
-        //printf("next_line(else): %s\n", next_line);
-        str = ft_strdup(get_next_line(fd));
-        //printf("line(else): %s\n", str);
-    }
-    return (str);
+
+
+    // if (buf[i] == '\n')
+    // {
+    //     str = ft_strjoin(next_line, ft_substr(buf, 0, i));
+    //     //aux = ft_strdup(next_line);
+    //     next_line = ft_substr(buf, i + 1, BUFFER_SIZE - i);
+	// 	printf("if:");
+	// 	printf("str: %s\n", str);
+	// 	printf("next_line: %s\n*", next_line);
+    //     ft_putendl_fd(str, 1);
+	// 	if (ft_strlen(next_line) != 0)
+	// 		get_next_line(fd);
+    //     //printf("next_line: %s\n", next_line);
+	// 	return (str);
+    // }
+    // else
+    // {
+    //     aux = ft_strdup(next_line);
+    //     next_line = ft_strjoin(aux, buf);
+    //     //printf("next_line(else): %s\n", next_line);
+    //     str = ft_strdup(get_next_line(fd));
+    //     //printf("line(else): %s\n", str);
+    // }
+    // return (str);
+
+
     // str = ft_strjoin(next_line, buf);
     // //ft_strlcpy(str, buf, i + 1);
     // printf("str: %s\n", str);
@@ -210,13 +264,14 @@ char    *get_next_line(int fd)
     // return (aux);
 }
 
-int main(void)
-{
-    int fd;
+// int main(void)
+// {
+//     int fd;
 
-    fd = open("teste", O_RDONLY);
-    get_next_line(fd);
-    get_next_line(fd);
-    get_next_line(fd);
-    //get_next_line(fd);
-}
+//     fd = open("teste", O_RDONLY);
+//     get_next_line(fd);
+//     //get_next_line(fd);
+//     // get_next_line(fd);
+//     // get_next_line(fd);
+//     // get_next_line(fd);
+// }

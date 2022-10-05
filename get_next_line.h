@@ -6,7 +6,7 @@
 /*   By: byoshimo <byoshimo@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 01:40:22 by byoshimo          #+#    #+#             */
-/*   Updated: 2022/10/04 02:52:17 by byoshimo         ###   ########.fr       */
+/*   Updated: 2022/10/05 04:31:38 by byoshimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <stdlib.h>
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 42
+# define BUFFER_SIZE 1
 #endif
 
 char	*get_next_line(int fd);
