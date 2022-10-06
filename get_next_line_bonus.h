@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: byoshimo <byoshimo@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/04 01:40:22 by byoshimo          #+#    #+#             */
-/*   Updated: 2022/10/06 23:25:38 by byoshimo         ###   ########.fr       */
+/*   Created: 2022/10/06 20:26:46 by byoshimo          #+#    #+#             */
+/*   Updated: 2022/10/06 23:25:26 by byoshimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <stdio.h>
 //# include <fcntl.h>

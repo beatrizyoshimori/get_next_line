@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: byoshimo <byoshimo@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/06 19:04:40 by byoshimo          #+#    #+#             */
-/*   Updated: 2022/10/06 23:34:43 by byoshimo         ###   ########.fr       */
+/*   Created: 2022/10/06 20:29:21 by byoshimo          #+#    #+#             */
+/*   Updated: 2022/10/06 23:25:15 by byoshimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int	ft_strlen(const char *s)
 {
@@ -68,19 +68,17 @@ char	*ft_substr(char *s, int start, int len)
 {
 	int		i;
 	char	*sub;
-	int		length;
 
-	length = ft_strlen(s);
-	if (start > length)
+	if (start > ft_strlen(s))
 		sub = malloc(1);
-	else if (len < length)
+	else if (len < ft_strlen(s))
 		sub = malloc(len + 1);
 	else
-		sub = malloc(length - start + 1);
+		sub = malloc(ft_strlen(s) - start + 1);
 	if (sub == NULL)
 		return (NULL);
 	i = 0;
-	if (start <= length)
+	if (start <= ft_strlen(s))
 	{
 		while (s[start] && i < len)
 		{

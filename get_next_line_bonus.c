@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: byoshimo <byoshimo@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/04 01:49:36 by byoshimo          #+#    #+#             */
-/*   Updated: 2022/10/06 23:22:50 by byoshimo         ###   ########.fr       */
+/*   Created: 2022/10/06 20:26:09 by byoshimo          #+#    #+#             */
+/*   Updated: 2022/10/06 23:24:42 by byoshimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*make_next_line(char **next_line, int rd, int fd)
 {
@@ -44,37 +44,20 @@ static char	*make_next_line(char **next_line, int rd, int fd)
 char	*get_next_line(int fd)
 {
 	char		*str;
-	static char	*next_line;
+	static char	*nxt_line[1024];
 	int			rd;
 
 	str = (char *)calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!str)
 		return (NULL);
 	rd = read(fd, str, BUFFER_SIZE);
-	if (BUFFER_SIZE <= 0 || rd < 0 || (rd == 0 && ft_strlen(next_line) == 0))
+	if (BUFFER_SIZE <= 0 || rd < 0 || (rd == 0 && ft_strlen(nxt_line[fd]) == 0))
 	{
 		free(str);
 		return (NULL);
 	}
-	if (next_line == NULL)
-		next_line = calloc(1, 1);
-	next_line = ft_strjoin_free(next_line, str);
-	return (make_next_line(&next_line, rd, fd));
+	if (nxt_line[fd] == NULL)
+		nxt_line[fd] = calloc(1, 1);
+	nxt_line[fd] = ft_strjoin_free(nxt_line[fd], str);
+	return (make_next_line(&nxt_line[fd], rd, fd));
 }
-
-// int main(void)
-// {
-//     int fd;
-// 	int	i;
-// 	char	*str;
-
-//     fd = open("teste", O_RDONLY);
-// 	i = 0;
-// 	while (i < 2)
-// 	{
-// 		str = get_next_line(fd);
-// 		printf("%s", str);
-// 		free(str);
-// 		i++;
-// 	}
-// }
