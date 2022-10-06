@@ -96,27 +96,28 @@ char	*ft_substr_free(char *s, int start, int len)
 	return (sub);
 }
 
-char	*ft_strdup(char *src)
-{
-	int		i;
-	int		length;
-	char	*c;
+// char	*ft_strdup(char *src)
+// {
+// 	int		i;
+// 	int		length;
+// 	char	*c;
 
-	length = ft_strlen(src);
-	if (!src)
-		return (NULL);
-	c = (char *)malloc((length + 1) * sizeof(char));
-	if (c == NULL)
-		return (NULL);
-	i = 0;
-	while (i < length)
-	{
-		c[i] = src[i];
-		i++;
-	}
-	c[i] = '\0';
-	return (c);
-}
+// 	length = ft_strlen(src);
+// 	if (!src)
+// 		return (NULL);
+// 	c = (char *)malloc((length + 1) * sizeof(char));
+// 	if (c == NULL)
+// 		return (NULL);
+// 	i = 0;
+// 	while (i < length)
+// 	{
+// 		c[i] = src[i];
+// 		i++;
+// 	}
+// 	c[i] = '\0';
+// 	free(src);
+// 	return (c);
+// }
 
 char	*ft_strjoin_free(char *s1, char *s2)
 {
@@ -149,7 +150,6 @@ char	*ft_strjoin_free(char *s1, char *s2)
 char    *get_next_line(int fd)
 {
 	char		*str;
-	char		*aux;
 	static char	*next_line;
 	int			rd;
 	int			i;
@@ -165,11 +165,11 @@ char    *get_next_line(int fd)
 		return (NULL);
 	}
 	if (next_line == NULL)
-		next_line = ft_strdup("");
+		next_line = calloc(1, 1);
 	next_line = ft_strjoin_free(next_line, str);
 	length = ft_strlen(next_line);
 	i = 0;
-	while (next_line[i] != '\n' && next_line[i] && i < length)
+	while (next_line[i] != '\n' && i < length)
 		i++;
 	if (next_line[i] == '\n' || rd < BUFFER_SIZE)
 	{
@@ -183,11 +183,8 @@ char    *get_next_line(int fd)
 		return (str);
 	}
 	else
-	{
-		aux = get_next_line(fd);
-		str = ft_strdup(aux);
-		free(aux);
-	}
+		str = get_next_line(fd);
+		//str = ft_strdup(get_next_line(fd));
 	return (str);
 }
 
