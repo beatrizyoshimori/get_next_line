@@ -41,7 +41,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (t);
 }
 
-char	*ft_strdup_free(char *src)
+char	*ft_strdup(char *src)
 {
 	int		i;
 	int		length;
@@ -60,54 +60,26 @@ char	*ft_strdup_free(char *src)
 		i++;
 	}
 	c[i] = '\0';
-	free(src);
 	return (c);
 }
 
-char	*ft_substr(char *s, int start, int len)
-{
-	int		i;
-	char	*sub;
-	int		length;
-
-	length = ft_strlen(s);
-	if (start > length)
-		sub = malloc(1);
-	else if (len < length)
-		sub = malloc(len + 1);
-	else
-		sub = malloc(length - start + 1);
-	if (sub == NULL)
-		return (NULL);
-	i = 0;
-	if (start <= length)
-	{
-		while (s[start] && i < len)
-		{
-			sub[i] = s[start];
-			i++;
-			start++;
-		}
-	}
-	sub[i] = '\0';
-	return (sub);
-}
-
-// char	*ft_substr_free(char *s, int start, int len)
+// char	*ft_substr(char *s, int start, int len)
 // {
 // 	int		i;
 // 	char	*sub;
+// 	int		length;
 
-// 	if (start > ft_strlen(s))
+// 	length = ft_strlen(s);
+// 	if (start > length)
 // 		sub = malloc(1);
-// 	else if (len < ft_strlen(s))
+// 	else if (len < length)
 // 		sub = malloc(len + 1);
 // 	else
-// 		sub = malloc(ft_strlen(s) - start + 1);
+// 		sub = malloc(length - start + 1);
 // 	if (sub == NULL)
 // 		return (NULL);
 // 	i = 0;
-// 	if (start <= ft_strlen(s))
+// 	if (start <= length)
 // 	{
 // 		while (s[start] && i < len)
 // 		{
@@ -117,9 +89,41 @@ char	*ft_substr(char *s, int start, int len)
 // 		}
 // 	}
 // 	sub[i] = '\0';
-// 	free(s);
 // 	return (sub);
 // }
+
+char	*ft_substr_free(char *s, int start, int len)
+{
+	int		i;
+	char	*sub;
+
+	if (start > ft_strlen(s))
+		sub = malloc(1);
+	else if (len < ft_strlen(s))
+		sub = malloc(len + 1);
+	else
+		sub = malloc(ft_strlen(s) - start + 1);
+	if (sub == NULL)
+		return (NULL);
+	i = 0;
+	if (start <= ft_strlen(s))
+	{
+		while (s[start] && i < len)
+		{
+			sub[i] = s[start];
+			i++;
+			start++;
+		}
+	}
+	sub[i] = '\0';
+	free(s);
+	if (!sub[0])
+		{
+			free(sub);
+			sub = NULL;
+		}
+	return (sub);
+}
 
 char	*ft_strjoin_free(char *s1, char *s2)
 {
@@ -127,6 +131,8 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	int		j;
 	char	*s3;
 
+	if (s1 == NULL)
+		s1 = calloc(1, 1);
 	s3 = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (s3 == NULL)
 		return (NULL);
@@ -144,7 +150,7 @@ char	*ft_strjoin_free(char *s1, char *s2)
 		i++;
 	}
 	s3[i] = '\0';
-	free(s1);
-	free(s2);
-	return (s3);
+	// free(s1);
+	// free(s2);
+	return (free(s1), free(s2), s3);
 }
