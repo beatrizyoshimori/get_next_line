@@ -6,7 +6,7 @@
 /*   By: byoshimo <byoshimo@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 19:04:40 by byoshimo          #+#    #+#             */
-/*   Updated: 2022/10/06 23:34:43 by byoshimo         ###   ########.fr       */
+/*   Updated: 2022/10/08 22:37:30 by byoshimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,35 +63,6 @@ char	*ft_strdup(char *src)
 	return (c);
 }
 
-// char	*ft_substr(char *s, int start, int len)
-// {
-// 	int		i;
-// 	char	*sub;
-// 	int		length;
-
-// 	length = ft_strlen(s);
-// 	if (start > length)
-// 		sub = malloc(1);
-// 	else if (len < length)
-// 		sub = malloc(len + 1);
-// 	else
-// 		sub = malloc(length - start + 1);
-// 	if (sub == NULL)
-// 		return (NULL);
-// 	i = 0;
-// 	if (start <= length)
-// 	{
-// 		while (s[start] && i < len)
-// 		{
-// 			sub[i] = s[start];
-// 			i++;
-// 			start++;
-// 		}
-// 	}
-// 	sub[i] = '\0';
-// 	return (sub);
-// }
-
 char	*ft_substr_free(char *s, int start, int len)
 {
 	int		i;
@@ -109,20 +80,15 @@ char	*ft_substr_free(char *s, int start, int len)
 	if (start <= ft_strlen(s))
 	{
 		while (s[start] && i < len)
-		{
-			sub[i] = s[start];
-			i++;
-			start++;
-		}
+			sub[i++] = s[start++];
 	}
 	sub[i] = '\0';
-	free(s);
 	if (!sub[0])
-		{
-			free(sub);
-			sub = NULL;
-		}
-	return (sub);
+	{
+		free(sub);
+		sub = NULL;
+	}
+	return (free(s), sub);
 }
 
 char	*ft_strjoin_free(char *s1, char *s2)
@@ -131,8 +97,6 @@ char	*ft_strjoin_free(char *s1, char *s2)
 	int		j;
 	char	*s3;
 
-	if (s1 == NULL)
-		s1 = calloc(1, 1);
 	s3 = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (s3 == NULL)
 		return (NULL);
@@ -150,7 +114,5 @@ char	*ft_strjoin_free(char *s1, char *s2)
 		i++;
 	}
 	s3[i] = '\0';
-	// free(s1);
-	// free(s2);
 	return (free(s1), free(s2), s3);
 }

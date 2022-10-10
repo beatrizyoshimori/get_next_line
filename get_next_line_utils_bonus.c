@@ -6,7 +6,7 @@
 /*   By: byoshimo <byoshimo@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 20:29:21 by byoshimo          #+#    #+#             */
-/*   Updated: 2022/10/06 23:25:15 by byoshimo         ###   ########.fr       */
+/*   Updated: 2022/10/08 23:00:28 by byoshimo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (t);
 }
 
-char	*ft_strdup_free(char *src)
+char	*ft_strdup(char *src)
 {
 	int		i;
 	int		length;
@@ -60,11 +60,10 @@ char	*ft_strdup_free(char *src)
 		i++;
 	}
 	c[i] = '\0';
-	free(src);
 	return (c);
 }
 
-char	*ft_substr(char *s, int start, int len)
+char	*ft_substr_free(char *s, int start, int len)
 {
 	int		i;
 	char	*sub;
@@ -81,43 +80,16 @@ char	*ft_substr(char *s, int start, int len)
 	if (start <= ft_strlen(s))
 	{
 		while (s[start] && i < len)
-		{
-			sub[i] = s[start];
-			i++;
-			start++;
-		}
+			sub[i++] = s[start++];
 	}
 	sub[i] = '\0';
-	return (sub);
+	if (!sub[0])
+	{
+		free(sub);
+		sub = NULL;
+	}
+	return (free(s), sub);
 }
-
-// char	*ft_substr_free(char *s, int start, int len)
-// {
-// 	int		i;
-// 	char	*sub;
-
-// 	if (start > ft_strlen(s))
-// 		sub = malloc(1);
-// 	else if (len < ft_strlen(s))
-// 		sub = malloc(len + 1);
-// 	else
-// 		sub = malloc(ft_strlen(s) - start + 1);
-// 	if (sub == NULL)
-// 		return (NULL);
-// 	i = 0;
-// 	if (start <= ft_strlen(s))
-// 	{
-// 		while (s[start] && i < len)
-// 		{
-// 			sub[i] = s[start];
-// 			i++;
-// 			start++;
-// 		}
-// 	}
-// 	sub[i] = '\0';
-// 	free(s);
-// 	return (sub);
-// }
 
 char	*ft_strjoin_free(char *s1, char *s2)
 {
@@ -142,7 +114,5 @@ char	*ft_strjoin_free(char *s1, char *s2)
 		i++;
 	}
 	s3[i] = '\0';
-	free(s1);
-	free(s2);
-	return (s3);
+	return (free(s1), free(s2), s3);
 }
